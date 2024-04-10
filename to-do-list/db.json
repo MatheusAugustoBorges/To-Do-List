@@ -1,24 +1,3 @@
 {
-  "tarefas": [
-    {
-      "id": "3",
-      "nome": "Item 3"
-    },
-    {
-      "id": "034b",
-      "nome": "asdsadas"
-    },
-    {
-      "id": "7859",
-      "nome": "iuuiu"
-    },
-    {
-      "id": "a580",
-      "nome": "asdsad"
-    },
-    {
-      "id": "bbe5",
-      "nome": "asdasddsadsa"
-    }
-  ]
+  "tarefas": []
 }

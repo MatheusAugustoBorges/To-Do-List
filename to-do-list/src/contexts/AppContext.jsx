@@ -10,7 +10,20 @@ export const AppContextProvider = (props) => {
 
   const [tarefas, setTarefas] = useState([]);
 
+  const [loadingCarregar, setLoadingCarregar] = useState(false);
+  const [loadingCriar, setLoadingCriar] = useState(false);
+  const [loadingEditar, setLoadingEditar] = useState(null);
+  const [loadingDeletar, setLoadingDeletar] = useState(null);
+
+  const atrasoRequisicao = async () => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  };
+
   const carregarTarefas = async () => {
+    setLoadingCarregar(true);
+
+    await atrasoRequisicao();
+
     // O objeto de retorno da requisição é desestruturado para pegar o valor de data
     // que é o array de tarefas e caso não exista valor, é atribuído um array vazio
     const {data = []} = await api.get('/tarefas');
@@ -18,9 +31,15 @@ export const AppContextProvider = (props) => {
     setTarefas([
       ...data,
     ]);
+
+    setLoadingCarregar(false);
   };
 
   const adicionarTarefas = async (nomeTarefa) => {
+    setLoadingCriar(true);
+
+    await atrasoRequisicao();
+
     // { data: tarefa } é a desestruturação do objeto de retorno da requisição
     // Aqui estamos extraindo o objeto retornado pela requisição e armazenando-o na variável tarefa
     // Ou seja, estamos pegando o array de tarefas contido em data e armazenando na variável tarefa
@@ -36,9 +55,15 @@ export const AppContextProvider = (props) => {
         tarefa
       ];
     });
+
+    setLoadingCriar(false);
   }
 
   const removerTarefas = async (idTarefa) => {
+    setLoadingDeletar(idTarefa);
+
+    await atrasoRequisicao();
+
     await api.delete(`/tarefas/${idTarefa}`);
 
     setTarefas(estadoAtual => {
@@ -48,9 +73,15 @@ export const AppContextProvider = (props) => {
         ...tarefasAtualizadas,
       ];
     });
+
+    setLoadingDeletar(null);
   };
 
   const editarTarefas = async (idTarefa, nomeTarefa) => {
+    setLoadingEditar(idTarefa);
+
+    await atrasoRequisicao();
+
     const { data: tarefaAtualizada } = await api.put(`/tarefas/${idTarefa}`, {
       nome: nomeTarefa,
     });
@@ -67,6 +98,8 @@ export const AppContextProvider = (props) => {
         ...tarefasAtualizadas,
       ];
     });
+
+    setLoadingEditar(null);
   };
 
   useEffect(() => {
@@ -80,6 +113,10 @@ export const AppContextProvider = (props) => {
         adicionarTarefas,
         removerTarefas,
         editarTarefas,
+        loadingCarregar,
+        loadingCriar,
+        loadingEditar,
+        loadingDeletar,
     }}>
       {children}
     </AppContext.Provider>
